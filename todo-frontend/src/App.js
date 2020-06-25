@@ -39,6 +39,15 @@ function App() {
     fetchTodoAndSetTodos();
   };
 
+  const updateTodo = async (e, id) => {
+    e.stopPropagation()
+    const payload = {
+      completed: !todos.find(todo => todo._id === id).completed,
+    }
+    const updatedTodo = await APIHelper.updateTodo(id, payload)
+    setTodos(todos.map(todo => (todo._id === id ? updatedTodo : todo)))
+  }
+
   return (
     <div className="App">
       <div>
@@ -58,7 +67,7 @@ function App() {
 
       {todos.map(({ _id, task, completed }, i) => (
         <h5 key={i} className={completed ? "completed" : ""}>
-          <input type="checkBox" /> {task}
+          <input type="checkBox" onClick={e => updateTodo(e, _id)} checked={completed ? "checked":""} /> {task}
         </h5>
       ))}
       <hr />

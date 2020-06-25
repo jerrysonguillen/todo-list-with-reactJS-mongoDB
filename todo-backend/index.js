@@ -42,6 +42,17 @@ app.delete("/todos", async (req,res, next) => {
   }
 } )
 
+app.put("/todos/:id", async (req, res, next) => {
+  try {
+    const todo = await db.Todo.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    })
+    return success(res, todo)
+  } catch (err) {
+    next({ status: 400, message: "failed to update todo" })
+  }
+})
+
 app.use((err, req, res, next) => {
   return res.status(err.status || 400).json({
     status: err.status || 400,
